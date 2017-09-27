@@ -27,22 +27,6 @@ module.exports = {
           });});
   },
 
-  list(req, res) {
-    return User
-      .findAll({
-        include: [{
-          model: NoteItem ,
-          as: 'noteItems',
-        }],
-        order: [
-          ['createdAt', 'DESC'],
-          [{ model: NoteItem, as: 'noteItems' }, 'createdAt', 'ASC'],
-        ],
-      })
-      .then((users) => res.status(200).send(users))
-      .catch((error) => res.status(400).send(error));
-  },
-
   retrieve(req, res) {
     return User
       .findById(req.params.userid, {
@@ -50,17 +34,28 @@ module.exports = {
           model: NoteItem ,
           as: 'noteItems',
         }],
+		order: [
+          [{ model: NoteItem, as: 'noteItems' }, 'createdAt', 'ASC'],
+        ],
       })
       .then((user) => {
         if (!user) {
-          return res.status(404).send({
-            message: 'user Not Found',
+          return res.send({
+            "code":404,
+            "success":"User do not match"
           });
         }
 		//console.log("lalaal");
-        return res.status(200).send(user);
+        return res.send({
+            "code":200,
+            "success":"user find sucessfull",
+            "user":user
+          });
       })
-      .catch((error) => res.status(400).send(error));
+      .catch((error) => {return res.send({
+            "code":404,
+            "success":"user do not match"
+          });});
   },
   check(req, res) {
 	var md5=require("md5");
@@ -69,7 +64,9 @@ module.exports = {
       .findOne({ where: {username: req.body.username,password: pwd} ,include: [{
           model: NoteItem ,
           as: 'noteItems',
-        }]
+        }],order: [
+          [{ model: NoteItem, as: 'noteItems' }, 'createdAt', 'ASC'],
+        ],
                })
       .then((user) => {
         if (!user) {
@@ -91,7 +88,6 @@ module.exports = {
   },
   update(req, res) {
 	var md5=require("md5");
-	var pwd=md5(req.body.password);
     return User
       .findById(req.params.userid, {
         include: [{
@@ -108,12 +104,51 @@ module.exports = {
         return user
           .update({
 			email: req.body.email || user.email,
-			password: pwd || user.password,
 			gender: req.body.gender || user.gender,
 			location: req.body.location || user.location,
 			category: req.body.category || user.category,
 			price: req.body.price || user.price,
 			description: req.body.description || user.description,
+          })
+          .then(() => {
+			return res.send({
+            "code":200,
+            "success":"Update sucessfull",
+          });
+		})
+          .catch((error) => {
+			return res.send({
+            "code":404,
+            "success":"Update fail",
+          });
+		});
+      })
+      .catch((error) => {
+			return res.send({
+            "code":404,
+            "success":"Update fail",
+          });
+		});
+  },
+  updatePwd(req, res) {
+	var md5=require("md5");
+	var pwd=md5(req.body.password);
+    return User
+      .findById(req.params.userid, {
+        include: [{
+          model: NoteItem,
+          as: 'noteItems',
+        }],
+      })
+      .then(user => {
+        if (!user) {
+          return res.status(404).send({
+            message: 'user Not Found',
+          });
+        }
+        return user
+          .update({
+			password: pwd || user.password,
           })
           .then(() => {
 			return res.send({

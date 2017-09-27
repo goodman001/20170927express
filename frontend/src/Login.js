@@ -5,10 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
-var apiBaseUrl = "http://192.168.44.130:8000/api/";
 import axios from 'axios';
-import UploadScreen from './UploadScreen';
-import UploadPage from './UploadPage';
 
 import UserPage from './UserPage';
 
@@ -20,6 +17,7 @@ class Login extends Component {
       <MuiThemeProvider>
         <div>
          <TextField
+		   type="text"
            hintText="Enter your username"
            floatingLabelText="username"
            onChange = {(event,newValue) => this.setState({username:newValue})}

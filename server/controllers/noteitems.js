@@ -79,25 +79,41 @@ module.exports = {
   },
 
   destroy(req, res) {
-    return TodoItem
+    return NoteItem
       .find({
         where: {
-          id: req.params.todoItemId,
-          todoId: req.params.todoId,
+          id: req.params.noteid,
+          noteId: req.params.userid,
         },
       })
-      .then(todoItem => {
-        if (!todoItem) {
-          return res.status(404).send({
-            message: 'TodoItem Not Found',
+      .then(noteItem => {
+        if (!noteItem) {
+          return res.send({
+            "code":404,
+            "success":"Note lalal fail!"
           });
         }
 
-        return todoItem
+        return noteItem
           .destroy()
-          .then(() => res.status(204).send())
-          .catch(error => res.status(400).send(error));
+          .then(() => {
+            return res.send({
+            "code":200,
+            "success":"Note del success"
+          });
+         })
+          .catch(error => {
+            return res.send({
+            "code":404,
+            "success":"Note del fail!"
+            });
+        });
       })
-      .catch(error => res.status(400).send(error));
+      .catch(error => {
+        return res.send({
+            "code":404,
+            "success":"Note del fail!"
+            });
+    });
   },
 };

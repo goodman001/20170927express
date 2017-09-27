@@ -13,6 +13,8 @@ sequelize db:migrate
  curl -d "title=tt1&content=cc" -X POST "http://localhost:8000/api/notes/1"
  curl -d "title=tt2&content=cc2" -X POST "http://localhost:8000/api/notes/1/items/1"
  
+  curl "http://localhost:8000/api/notes/2/items/1"
+ 
  
  
  

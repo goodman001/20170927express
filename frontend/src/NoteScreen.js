@@ -6,7 +6,6 @@ Loginscreen is the main screen which the user is shown on first visit to page an
 hitting logout
 */
 import LoginScreen from './Loginscreen';
-import UploadScreen from './UploadScreen';
 import UserPage from './UserPage';
 /*
 Module:Material-UI
@@ -50,6 +49,7 @@ class NoteScreen extends Component {
       printingmessage:'',
       printButtonDisabled:false,
       user:this.props.user,
+	  noteItems:this.props.user.noteItems,
       notePreview:[],
       newtitle:'',
       newcontent:'',
@@ -59,67 +59,73 @@ class NoteScreen extends Component {
     }
   }
   componentDidMount(){
-    
+    this.renderNotelist(this.state.noteItems);
   }
   componentWillMount(){
-    var self = this;
-    var currentScreen=[];
-    var noteItems = this.props.user.noteItems;
-    var notetitle;
     
+  }
+  
+  fetchDetails = (e) => {
+    const data = e.target.getAttribute('data-item');
+    console.log('We need to get the details for ', data);
+  }
+  isEmpty(obj) {
+    return Object.keys(obj).length === 0;
+}
+  renderNotelist(noteItems){
+	var self = this;    
     var notePreview=[];
-    var newnotePreview=[];
-        var z;
-        for(var j in noteItems){
-          console.log(j);
-          newnotePreview.push(<tr>
-            <td>
-            {noteItems[j].id}
-             
-            </td>
-            <td>
-           {noteItems[j].title}
-            </td>
-            <td>
-            {noteItems[j].content}
-            </td>
-            <td key={j}>
-          
-            <RaisedButton label="Edit" primary={true} data-tag={j} style={style} onClick={(event) => self.handleNoteEditClick(event,j)}/>{j}
-            
-            </td>
-            </tr>
-          )
-        }
-    notePreview.push(
-      
-      <MuiThemeProvider>
-      <div>
-        <div className="noteheader">
-         <center><h3>Note list</h3></center>
-        <RaisedButton  label="NewNote" primary={true} style={style1} onClick={(event) => this.handleNoteCreateClick(event)}/>
-        </div>
-        <div className="notecontainer">
-                 <table className="notetable">
-
-                  <tbody>
-                  <tr>
-                    <th>ID</th>
-                    <th>TITLE</th>
-                    <th>CONTENT</th>
-                    <th></th>
-                  </tr>
-        {newnotePreview} 
-                   </tbody>
-                </table>
-         </div>
-       </div>
-      </MuiThemeProvider>
-                
-                      )
+	console.log(noteItems);
+	self.setState({noteItems:noteItems});
+    notePreview = this.renderResultTable(noteItems);
     this.setState({notePreview});
     
     this.setState({role:this.props.role,user:this.props.user});
+  }
+  renderResultRows(noteItems) {
+    var self = this;
+    return noteItems.map((data,index) =>{
+        return (
+            <tr key={index} data-item={data} onClick={(event) =>this.fetchDetails(event)}>
+                <td data-title="id">{data.id}</td>
+                <td data-title="title">{data.title}</td>
+                <td data-title="content">{data.content}</td>
+				<td data-title="content">
+						<RaisedButton label="Edit" primary={true} style={style} onClick={(event) => self.handleNoteEditClick(event,index)}/>
+						<RaisedButton label="Delete" primary={true} style={style} onClick={(event) => self.handleNoteDelClick(event,index)}/>
+				</td>
+            </tr>
+        );
+    });
+  }
+  renderResultTable(data) {
+    var self = this;
+    return(
+		<MuiThemeProvider>
+		  <div>
+			<div className="noteheader">
+			 <center><h3>Note list</h3></center>
+			<RaisedButton  label="NewNote" primary={true} style={style1} onClick={(event) => this.handleNoteCreateClick(event)}/>
+			</div>
+			<div className="notecontainer">
+					 <table className="notetable">
+					  <tr>
+						<th>ID</th>
+						<th>TITLE</th>
+						<th>CONTENT</th>
+						<th></th>
+					  </tr>
+					  <tbody>
+					  
+						{!this.isEmpty(data)
+                        ? this.renderResultRows(data)
+                        : ''}
+					   </tbody>
+					</table>
+			 </div>
+		   </div>
+		  </MuiThemeProvider>
+	);
   }
   /*
   Function:handleCloseClick
@@ -127,6 +133,7 @@ class NoteScreen extends Component {
   Usage:This fxn is used to remove file from filesPreview div
   if user clicks close icon adjacent to selected file
   */ 
+  
   handleCloseClick(event,index){
     // console.log("filename",index);
     var filesToBeSent=this.state.filesToBeSent;
@@ -185,40 +192,93 @@ class NoteScreen extends Component {
 handleNoteEditClick(event,i){
     var self = this;
     console.log(i);
-  console.log(event.target.getAttribute('data-tag'));
+    console.log(event.target.getAttribute('data-tag'));
     //this.setState({edittitle:this.state.user.noteItems[i].title});
    // this.setState({editcontent:this.state.user.noteItems[i].content});
-    this.state.edittitle = this.state.user.noteItems[i].title;
-    this.state.editcontent = this.state.user.noteItems[i].content;
+    this.state.edittitle = this.state.noteItems[i].title;
+    this.state.editcontent = this.state.noteItems[i].content;
     console.log(this.state.edittile );
     var localloginComponent = [];
-    if(1){
-     localloginComponent.push(
-          <MuiThemeProvider>
-            <div>
-             <TextField
-               type="text"
-               hintText="Enter Note title"
-               value={this.state.edittitle}
-               floatingLabelText="Title"
-               onChange = {(event,newValue) => this.onTodoChange(newValue,0,i)}
-               />
-             <br/>
-               <TextField
-                 type="text"
-                 hintText="Enter Note Content!"
-                 value = {this.state.editcontent}
-                 floatingLabelText="Content"
-                 onChange = {(event,newValue) => this.onTodoChange(newValue,1,i)}
-                 />
-               <br/>
-               <RaisedButton label="Edit" primary={true} style={style} onClick={(event) => this.handleNoteEditData(event,i)}/>
-           </div>
-           </MuiThemeProvider>
-        )
-  }
+	localloginComponent.push(
+	  <MuiThemeProvider>
+		<div>
+		 <TextField
+		   type="text"
+		   hintText="Enter Note title"
+		   value={this.state.edittitle}
+		   floatingLabelText="Title"
+		   onChange = {(event,newValue) => this.onTodoChange(newValue,0,i)}
+		   />
+		 <br/>
+		   <TextField
+			 type="text"
+			 hintText="Enter Note Content!"
+			 value = {this.state.editcontent}
+			 floatingLabelText="Content"
+			 onChange = {(event,newValue) => this.onTodoChange(newValue,1,i)}
+			 />
+		   <br/>
+		   <RaisedButton label="Edit" primary={true} style={style} onClick={(event) => this.handleNoteEditData(event,i)}/>
+		   <RaisedButton label="Cancel" primary={true} style={style} onClick={() => this.renderNotelist(this.state.noteItems)}/>
+	   </div>
+	   </MuiThemeProvider>
+	)
      this.setState({notePreview:localloginComponent})
     //this.props.appContext.setState({userPage:userPage,uploadScreen:[]})
+    
+  }
+handleNoteDelClick(event,i){
+    var self = this;
+    console.log(i);
+    console.log(event.target.getAttribute('data-tag'));
+    axios.get('/api/notes/'+this.state.userid+"/items/"+this.state.noteItems[i].id)//api/notes/1/items/1
+       .then(function (response) {
+       console.log(response);
+       if(response.data.code == 200){
+         console.log("note delete successfull");
+         //console.log(response.data.user);
+         //var uploadScreen=[];
+         //uploadScreen.push(<UserPage appContext={self.props.appContext} role={self.state.loginRole} user={response.data.user} />)
+         self.setState({edittitle:""});
+         self.setState({editcontent:""});
+         alert("Congradulations!Delete Note info Successfully!");
+		 axios.get('/api/users/'+self.state.userid)//api/notes/1/items/1
+		   .then(function (response) {
+		   console.log(response);
+		   if(response.data.code == 200){
+			 console.log("get successfull");
+			 //console.log(response.data.user);
+			 //var uploadScreen=[];
+			 //uploadScreen.push(<UserPage appContext={self.props.appContext} role={self.state.loginRole} user={response.data.user} />)
+			 
+			 self.renderNotelist(response.data.user.noteItems);
+		   }
+		   else if(response.data.code == 404){
+			 console.log("get fail");
+			 //alert(response.data.success)
+		   }
+		   else{
+			 console.log("get fail");
+			 //alert("Note update fail");
+		   }
+		   })
+		   .catch(function (error) {
+		   console.log(error);
+		   });
+		 
+       }
+       else if(response.data.code == 404){
+         console.log("Note update fail");
+         alert(response.data.success)
+       }
+       else{
+         console.log("Note update fail");
+         alert("Note update fail");
+       }
+       })
+       .catch(function (error) {
+       console.log(error);
+       });
     
   }
 onTodoChange(value,index,i){
@@ -252,6 +312,7 @@ onTodoChange(value,index,i){
                  />
                <br/>
                <RaisedButton label="Create" primary={true} style={style} onClick={(event) => this.handleNoteEditData(event,i)}/>
+			   <RaisedButton label="Cancel" primary={true} style={style} onClick={() => this.renderNotelist(this.state.noteItems)}/>
            </div>
            </MuiThemeProvider>
         )
@@ -260,16 +321,17 @@ this.setState({editcontent:contilev});
 this.setState({notePreview:localloginComponent})
 }
 handleNoteEditData(event,i){
+  var self = this;
   console.log(this.state.edittitle);
   console.log(this.state.editcontent);
-  console.log(i);
+  console.log(this.state.noteItems[i]);
   if(this.state.edittitle.length>0 && this.state.editcontent.length>0) {
       var payload={
         "title":this.state.edittitle,
         "content":this.state.editcontent,
       }
       console.log(payload);
-      axios.post('api/notes/'+this.state.userid+"/items/"+i, payload)//api/notes/1/items/1
+      axios.post('/api/notes/'+this.state.userid+"/items/"+this.state.noteItems[i].id, payload)//api/notes/1/items/1
        .then(function (response) {
        console.log(response);
        if(response.data.code == 200){
@@ -280,6 +342,30 @@ handleNoteEditData(event,i){
          self.setState({edittitle:""});
          self.setState({editcontent:""});
          alert("Congradulations!Update Note info Successfully!");
+		 axios.get('/api/users/'+self.state.userid)//api/notes/1/items/1
+		   .then(function (response) {
+		   console.log(response);
+		   if(response.data.code == 200){
+			 console.log("get successfull");
+			 //console.log(response.data.user);
+			 //var uploadScreen=[];
+			 //uploadScreen.push(<UserPage appContext={self.props.appContext} role={self.state.loginRole} user={response.data.user} />)
+			 
+			 self.renderNotelist(response.data.user.noteItems);
+		   }
+		   else if(response.data.code == 404){
+			 console.log("get fail");
+			 //alert(response.data.success)
+		   }
+		   else{
+			 console.log("get fail");
+			 //alert("Note update fail");
+		   }
+		   })
+		   .catch(function (error) {
+		   console.log(error);
+		   });
+		 
        }
        else if(response.data.code == 404){
          console.log("Note update fail");
@@ -293,9 +379,9 @@ handleNoteEditData(event,i){
        .catch(function (error) {
        console.log(error);
        });
-	   } else{
-		   alert("title or content is null!");
-	   } 
+  } else{
+      alert("title or content is null!");
+  } 
   
 }
 handleNoteCreateClick(event){
@@ -320,6 +406,7 @@ handleNoteCreateClick(event){
                  />
                <br/>
                <RaisedButton label="Create" primary={true} style={style} onClick={(event) => this.handleNoteUploadData(event)}/>
+			   <RaisedButton label="Cancel" primary={true} style={style} onClick={() => this.renderNotelist(this.state.noteItems)}/>
            </div>
            </MuiThemeProvider>
         )
@@ -328,16 +415,16 @@ handleNoteCreateClick(event){
 }
  handleNoteUploadData(event){
     var self = this;
-    
-		if(this.state.newtitle.length>0 && this.state.newcontent.length>0) {
+    if(this.state.newtitle.length>0 && this.state.newcontent.length>0) {
       var payload={
         "title":this.state.newtitle,
         "content":this.state.newcontent,
       }
       console.log(payload);
-      axios.post('api/notes/'+this.state.userid, payload)
+      axios.post('/api/notes/'+this.state.userid, payload)
        .then(function (response) {
        console.log(response);
+	   var ss = self;
        if(response.data.code == 200){
          console.log("note create successfull");
          //console.log(response.data.user);
@@ -346,61 +433,30 @@ handleNoteCreateClick(event){
          self.setState({newtitle:""});
          self.setState({newcontent:""});
          alert("Congradulations!Create Note Successfully!");
-          var currentScreen=[];
-          var noteItems = self.props.user.noteItems;
-          var notetitle;
-
-          var notePreview=[];
-          var newnotePreview=[];
-              var z;
-              for(var j in noteItems){
-                console.log(j);
-                newnotePreview.push(<tr>
-                  <td>
-                  {noteItems[j].id}
-
-                  </td>
-                  <td>
-                 {noteItems[j].title}
-                  </td>
-                  <td>
-                  {noteItems[j].content}
-                  </td>
-                  <td key={j}>
-
-                  <RaisedButton label="Edit" primary={true} data-tag={j} style={style} onClick={(event) => self.handleNoteEditClick(event,j)}/>{j}
-
-                  </td>
-                  </tr>
-                )
-              }
-          notePreview.push(
-
-            <MuiThemeProvider>
-            <div>
-              <div className="noteheader">
-               <center><h3>Note list</h3></center>
-              <RaisedButton  label="NewNote" primary={true} style={style1} onClick={(event) => self.handleNoteCreateClick(event)}/>
-              </div>
-              <div className="notecontainer">
-                       <table className="notetable">
-
-                        <tbody>
-                        <tr>
-                          <th>ID</th>
-                          <th>TITLE</th>
-                          <th>CONTENT</th>
-                          <th></th>
-                        </tr>
-              {newnotePreview} 
-                         </tbody>
-                      </table>
-               </div>
-             </div>
-            </MuiThemeProvider>
-
-                            )
-          self.setState({notePreview});
+		 axios.get('api/users/'+self.state.userid)
+		   .then(function (response) {
+		   console.log(response);
+		   if(response.data.code == 200){
+			 console.log("note create successfull");
+			 console.log(response.data.user);
+			 //var uploadScreen=[];
+			 //uploadScreen.push(<UserPage appContext={self.props.appContext} role={self.state.loginRole} user={response.data.user} />)
+			 //ss.setState({newtitle:""});
+			 //ss.setState({newcontent:""});
+			 self.renderNotelist(response.data.user.noteItems);
+		   }
+		   else if(response.data.code == 404){
+			 console.log("Note create fail");
+			 alert(response.data.success)
+		   }
+		   else{
+			 console.log("Note create fail");
+			 alert("Note create fail");
+		   }
+		   })
+		   .catch(function (error) {
+		   console.log(error);
+		   });  
        }
        else if(response.data.code == 404){
          console.log("Note create fail");

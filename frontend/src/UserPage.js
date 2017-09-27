@@ -5,8 +5,6 @@ import MenuItem from 'material-ui/MenuItem';
 import AppBar from 'material-ui/AppBar';
 import FontIcon from 'material-ui/FontIcon';
 import {blue500, red500, greenA200} from 'material-ui/styles/colors';
-import UploadScreen from './UploadScreen';
-import Pastfiles from './Pastfiles';
 import LoginScreen from './Loginscreen'
 
 import ProfileScreen from './ProfileScreen';
@@ -60,23 +58,12 @@ class App extends Component {
       <div className="App">
         <MuiThemeProvider>
           <AppBar
-            title="Printing Page"
+            title="Control Panel"
             onLeftIconButtonTouchTap={(event) => this.toggleDrawer(event)}
           />
         </MuiThemeProvider>
         <MuiThemeProvider>
           <Drawer open={this.state.draweropen}>
-            <MenuItem>
-              <div>
-              User Profile
-              <a href="#"><FontIcon
-                className="material-icons drawerclosebutton"
-                color={blue500}
-                styles={{ top:10,}}
-                onClick={(event) => this.toggleDrawer(event)}
-              >clear</FontIcon></a>
-              </div>
-            </MenuItem>
               <div>
               <MenuItem onClick={(event) => this.handleMenuClick(event,"notelist")}>
                   Note list
