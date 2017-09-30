@@ -8,7 +8,9 @@ import MenuItem from 'material-ui/MenuItem';
 import axios from 'axios';
 
 import UserPage from './UserPage';
-
+/*
+ login page
+*/
 class Login extends Component {
   constructor(props){
     super(props);
@@ -48,7 +50,7 @@ class Login extends Component {
         <MuiThemeProvider>
           <div>
            <TextField
-             hintText="Enter your College Rollno"
+             hintText="Enter your Username"
              floatingLabelText="username"
              onChange = {(event,newValue) => this.setState({username:newValue})}
              />
@@ -66,6 +68,7 @@ class Login extends Component {
       )
       this.setState({loginComponent:localloginComponent})
   }
+  /* login btn click function */
   handleClick(event){
     var self = this;
 		if(this.state.username.length>0 && this.state.password.length>0) {
@@ -99,17 +102,16 @@ class Login extends Component {
 		   alert("username or password is null");
 	   } 
   }
+  /* change login page to  register page*/
   handleMenuChange(){
     //console.log("menuvalue",value);
-    var loginRole;
      var localloginComponent=[];
-      loginRole='student';
       localloginComponent.push(
         <MuiThemeProvider>
           <div>
            <TextField
-             hintText="Enter your College Rollno"
-             floatingLabelText="Student Id"
+             hintText="Enter your Username"
+             floatingLabelText="username"
              onChange = {(event,newValue) => this.setState({username:newValue})}
              />
            <br/>

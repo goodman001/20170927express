@@ -4,6 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import Login from './Login';
 import Register from './Register';
+/*login page*/
 class Loginscreen extends Component {
   constructor(props){
     super(props);
@@ -36,6 +37,9 @@ class Loginscreen extends Component {
                   loginmessage:loginmessage
                     })
   }
+  /*
+   * show login page
+  */
   handleClick(event,userRole){
     console.log("event",userRole);
     var loginmessage;

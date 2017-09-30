@@ -2,6 +2,7 @@ const User = require('../models').User;
 const NoteItem = require('../models').NoteItem;
 
 module.exports = {
+  /*create user*/
   create(req, res) {
 	var md5=require("md5");
 	var pwd=md5(req.body.password); 
@@ -26,7 +27,7 @@ module.exports = {
             "success":"Register fail"
           });});
   },
-
+  /*find user info*/
   retrieve(req, res) {
     return User
       .findById(req.params.userid, {
@@ -57,6 +58,7 @@ module.exports = {
             "success":"user do not match"
           });});
   },
+  /*check user and password*/
   check(req, res) {
 	var md5=require("md5");
 	var pwd=md5(req.body.password);
@@ -86,6 +88,7 @@ module.exports = {
             "success":"Username password do not match"
           });});
   },
+  /*update user info*/
   update(req, res) {
 	var md5=require("md5");
     return User
@@ -130,6 +133,7 @@ module.exports = {
           });
 		});
   },
+  /*modify pwd*/
   updatePwd(req, res) {
 	var md5=require("md5");
 	var pwd=md5(req.body.password);

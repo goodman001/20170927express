@@ -34,7 +34,7 @@ import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
 var request = require('superagent');
-
+/* Note list page */
 class NoteScreen extends Component {
   constructor(props){
     super(props);
@@ -71,7 +71,7 @@ class NoteScreen extends Component {
   }
   isEmpty(obj) {
     return Object.keys(obj).length === 0;
-}
+  }
   renderNotelist(noteItems){
 	var self = this;    
     var notePreview=[];
@@ -82,6 +82,7 @@ class NoteScreen extends Component {
     
     this.setState({role:this.props.role,user:this.props.user});
   }
+  /*show table > tr*/
   renderResultRows(noteItems) {
     var self = this;
     return noteItems.map((data,index) =>{
@@ -98,6 +99,7 @@ class NoteScreen extends Component {
         );
     });
   }
+  /* show table */
   renderResultTable(data) {
     var self = this;
     return(
@@ -128,12 +130,8 @@ class NoteScreen extends Component {
 	);
   }
   /*
-  Function:handleCloseClick
-  Parameters: event,index
-  Usage:This fxn is used to remove file from filesPreview div
-  if user clicks close icon adjacent to selected file
+  clost nav
   */ 
-  
   handleCloseClick(event,index){
     // console.log("filename",index);
     var filesToBeSent=this.state.filesToBeSent;
@@ -156,40 +154,9 @@ class NoteScreen extends Component {
     this.setState({filesToBeSent,filesPreview});
   }
   /*
-  Function:onDrop
-  Parameters: acceptedFiles, rejectedFiles
-  Usage:This fxn is default event handler of react drop-Dropzone
-  which is modified to update filesPreview div
-  */
-  /*generateRows(noteItems) {
-        console.log(noteItems);
-        //threadshow=[<TableCell>ID<TableCell>,<TableCell>Title<TableCell>,<TableCell>Content<TableCell>];
-        //this.setState({notethreadPreview,threadshow});
-        var notePreview=[];
-        for(var i in noteItems){
-          notePreview.push(<TableRow>
-            <TableCell>
-            {noteItems[i].id}
-            </TableCell>
-            <TableCell>
-            {noteItems[i].title}
-            </TableCell>
-            <TableCell>
-            {noteItems[i].content}
-            </TableCell>
-            </TableRow>
-          )
-        }
-        this.setState({notePreview});
-        
-    }*/
-/*
-  Function:handleClick
-  Parameters: event
-  Usage:This fxn is handler of submit button which is responsibel fo rhandling file uploads
-  to backend
-*/
-handleNoteEditClick(event,i){
+  note edit
+  */ 
+  handleNoteEditClick(event,i){
     var self = this;
     console.log(i);
     console.log(event.target.getAttribute('data-tag'));
@@ -227,7 +194,10 @@ handleNoteEditClick(event,i){
     //this.props.appContext.setState({userPage:userPage,uploadScreen:[]})
     
   }
-handleNoteDelClick(event,i){
+  /*
+   note del click
+  */
+  handleNoteDelClick(event,i){
     var self = this;
     console.log(i);
     console.log(event.target.getAttribute('data-tag'));
@@ -281,110 +251,114 @@ handleNoteDelClick(event,i){
        });
     
   }
-onTodoChange(value,index,i){
-  console.log(index);
-  var titlev = this.state.edittitle;
-  var contilev = this.state.editcontent;
-  //console.log(this.state.edittitle);
-  if(index == 0){
-    titlev = value;
-  }else{
-    contilev = value;
-  }
-  var localloginComponent = [];
-  localloginComponent.push(
-          <MuiThemeProvider>
-            <div>
-             <TextField
-               type="text"
-               hintText="Enter Note title"
-               value={titlev}
-               floatingLabelText="Title"
-               onChange = {(event,newValue) => this.onTodoChange(newValue,0,i)}
-               />
-             <br/>
-               <TextField
-                 type="text"
-                 hintText="Enter Note Content!"
-                 value = {contilev}
-                 floatingLabelText="Content"
-                 onChange = {(event,newValue) => this.onTodoChange(newValue,1,i)}
-                 />
-               <br/>
-               <RaisedButton label="Create" primary={true} style={style} onClick={(event) => this.handleNoteEditData(event,i)}/>
-			   <RaisedButton label="Cancel" primary={true} style={style} onClick={() => this.renderNotelist(this.state.noteItems)}/>
-           </div>
-           </MuiThemeProvider>
-        )
-  this.setState({edittitle:titlev});
-this.setState({editcontent:contilev});
-this.setState({notePreview:localloginComponent})
-}
-handleNoteEditData(event,i){
-  var self = this;
-  console.log(this.state.edittitle);
-  console.log(this.state.editcontent);
-  console.log(this.state.noteItems[i]);
-  if(this.state.edittitle.length>0 && this.state.editcontent.length>0) {
-      var payload={
-        "title":this.state.edittitle,
-        "content":this.state.editcontent,
-      }
-      console.log(payload);
-      axios.post('/api/notes/'+this.state.userid+"/items/"+this.state.noteItems[i].id, payload)//api/notes/1/items/1
-       .then(function (response) {
-       console.log(response);
-       if(response.data.code == 200){
-         console.log("note update successfull");
-         //console.log(response.data.user);
-         //var uploadScreen=[];
-         //uploadScreen.push(<UserPage appContext={self.props.appContext} role={self.state.loginRole} user={response.data.user} />)
-         self.setState({edittitle:""});
-         self.setState({editcontent:""});
-         alert("Congradulations!Update Note info Successfully!");
-		 axios.get('/api/users/'+self.state.userid)//api/notes/1/items/1
+  /*
+   get input content change
+  */
+  onTodoChange(value,index,i){
+	  console.log(index);
+	  var titlev = this.state.edittitle;
+	  var contilev = this.state.editcontent;
+	  //console.log(this.state.edittitle);
+	  if(index == 0){
+		titlev = value;
+	  }else{
+		contilev = value;
+	  }
+	  var localloginComponent = [];
+	  localloginComponent.push(
+			  <MuiThemeProvider>
+				<div>
+				 <TextField
+				   type="text"
+				   hintText="Enter Note title"
+				   value={titlev}
+				   floatingLabelText="Title"
+				   onChange = {(event,newValue) => this.onTodoChange(newValue,0,i)}
+				   />
+				 <br/>
+				   <TextField
+					 type="text"
+					 hintText="Enter Note Content!"
+					 value = {contilev}
+					 floatingLabelText="Content"
+					 onChange = {(event,newValue) => this.onTodoChange(newValue,1,i)}
+					 />
+				   <br/>
+				   <RaisedButton label="Create" primary={true} style={style} onClick={(event) => this.handleNoteEditData(event,i)}/>
+				   <RaisedButton label="Cancel" primary={true} style={style} onClick={() => this.renderNotelist(this.state.noteItems)}/>
+			   </div>
+			   </MuiThemeProvider>
+			)
+	  this.setState({edittitle:titlev});
+	this.setState({editcontent:contilev});
+	this.setState({notePreview:localloginComponent})
+	}
+  handleNoteEditData(event,i){
+	  var self = this;
+	  console.log(this.state.edittitle);
+	  console.log(this.state.editcontent);
+	  console.log(this.state.noteItems[i]);
+	  if(this.state.edittitle.length>0 && this.state.editcontent.length>0) {
+		  var payload={
+			"title":this.state.edittitle,
+			"content":this.state.editcontent,
+		  }
+		  console.log(payload);
+		  axios.post('/api/notes/'+this.state.userid+"/items/"+this.state.noteItems[i].id, payload)//api/notes/1/items/1
 		   .then(function (response) {
 		   console.log(response);
 		   if(response.data.code == 200){
-			 console.log("get successfull");
+			 console.log("note update successfull");
 			 //console.log(response.data.user);
 			 //var uploadScreen=[];
 			 //uploadScreen.push(<UserPage appContext={self.props.appContext} role={self.state.loginRole} user={response.data.user} />)
-			 
-			 self.renderNotelist(response.data.user.noteItems);
+			 self.setState({edittitle:""});
+			 self.setState({editcontent:""});
+			 alert("Congradulations!Update Note info Successfully!");
+			 axios.get('/api/users/'+self.state.userid)//api/notes/1/items/1
+			   .then(function (response) {
+			   console.log(response);
+			   if(response.data.code == 200){
+				 console.log("get successfull");
+				 //console.log(response.data.user);
+				 //var uploadScreen=[];
+				 //uploadScreen.push(<UserPage appContext={self.props.appContext} role={self.state.loginRole} user={response.data.user} />)
+
+				 self.renderNotelist(response.data.user.noteItems);
+			   }
+			   else if(response.data.code == 404){
+				 console.log("get fail");
+				 //alert(response.data.success)
+			   }
+			   else{
+				 console.log("get fail");
+				 //alert("Note update fail");
+			   }
+			   })
+			   .catch(function (error) {
+			   console.log(error);
+			   });
+
 		   }
 		   else if(response.data.code == 404){
-			 console.log("get fail");
-			 //alert(response.data.success)
+			 console.log("Note update fail");
+			 alert(response.data.success)
 		   }
 		   else{
-			 console.log("get fail");
-			 //alert("Note update fail");
+			 console.log("Note update fail");
+			 alert("Note update fail");
 		   }
 		   })
 		   .catch(function (error) {
 		   console.log(error);
 		   });
-		 
-       }
-       else if(response.data.code == 404){
-         console.log("Note update fail");
-         alert(response.data.success)
-       }
-       else{
-         console.log("Note update fail");
-         alert("Note update fail");
-       }
-       })
-       .catch(function (error) {
-       console.log(error);
-       });
-  } else{
-      alert("title or content is null!");
-  } 
+	  } else{
+		  alert("title or content is null!");
+	  } 
   
-}
-handleNoteCreateClick(event){
+	}
+  /* create note */
+  handleNoteCreateClick(event){
    var self = this;
     var localloginComponent = [];
     if(1){
@@ -413,6 +387,7 @@ handleNoteCreateClick(event){
   }
      this.setState({notePreview:localloginComponent})
 }
+ /* update note */
  handleNoteUploadData(event){
     var self = this;
     if(this.state.newtitle.length>0 && this.state.newcontent.length>0) {

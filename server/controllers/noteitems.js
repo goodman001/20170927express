@@ -1,6 +1,7 @@
 const NoteItem = require('../models').NoteItem;
 
 module.exports = {
+  /*create new note*/
   create(req, res) {
 	var currdatetime = new Date();
     return NoteItem
@@ -29,7 +30,7 @@ module.exports = {
 		  });
 	});
   },
-
+  /*update note*/
   update(req, res) {
     return NoteItem
       .find({
@@ -77,7 +78,7 @@ module.exports = {
 				  });
 			});
   },
-
+  /*delete note*/
   destroy(req, res) {
     return NoteItem
       .find({

@@ -9,7 +9,7 @@ import LoginScreen from './Loginscreen'
 
 import ProfileScreen from './ProfileScreen';
 import NoteScreen from './NoteScreen';
-
+/*User page include nav */
 class App extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +30,7 @@ class App extends Component {
   // console.log("drawer click");
   this.setState({draweropen: !this.state.draweropen})
   }
+  /*nav bar click*/
   handleMenuClick(event,page){
     switch(page){
       case "notelist":
