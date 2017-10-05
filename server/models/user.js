@@ -32,12 +32,20 @@ module.exports = (sequelize, DataTypes) => {
 	description: {
       type: DataTypes.STRING,
       allowNull: false,
-    }
+    },
+	role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   });
   User.associate = (models) => {
     User.hasMany(models.NoteItem, {
       foreignKey: 'noteId',
       as: 'noteItems',
+    });
+	User.hasMany(models.DateItem, {
+      foreignKey: 'dateId',
+      as: 'dateItems',
     });
   };
   return User;

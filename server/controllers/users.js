@@ -1,6 +1,6 @@
 const User = require('../models').User;
 const NoteItem = require('../models').NoteItem;
-
+const DateItem = require('../models').DateItem;
 module.exports = {
   /*create user*/
   create(req, res) {
@@ -16,6 +16,7 @@ module.exports = {
 		category: req.body.category,
 		price: req.body.price,
 		description: req.body.description,
+		role:req.body.role,
       })
       .then((user) =>{return res.send({
             "code":200,
@@ -31,10 +32,16 @@ module.exports = {
   retrieve(req, res) {
     return User
       .findById(req.params.userid, {
-        include: [{
-          model: NoteItem ,
-          as: 'noteItems',
-        }],
+        include: [
+			{
+              model: NoteItem ,
+              as: 'noteItems',
+            },
+			{
+		      model: DateItem ,
+              as: 'dateItems',
+            },
+				 ],
 		order: [
           [{ model: NoteItem, as: 'noteItems' }, 'createdAt', 'ASC'],
         ],
@@ -55,7 +62,7 @@ module.exports = {
       })
       .catch((error) => {return res.send({
             "code":404,
-            "success":"user do not match"
+            "success":error
           });});
   },
   /*check user and password*/
@@ -63,10 +70,16 @@ module.exports = {
 	var md5=require("md5");
 	var pwd=md5(req.body.password);
     return User
-      .findOne({ where: {username: req.body.username,password: pwd} ,include: [{
+      .findOne({ where: {username: req.body.username,password: pwd} ,include: [
+		  {
           model: NoteItem ,
           as: 'noteItems',
-        }],order: [
+          },
+		  {
+		      model: DateItem ,
+              as: 'dateItems',
+          },
+	  ],order: [
           [{ model: NoteItem, as: 'noteItems' }, 'createdAt', 'ASC'],
         ],
                })

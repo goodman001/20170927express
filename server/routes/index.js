@@ -2,6 +2,7 @@
 //const todoItemsController = require('../controllers').todoItems;
 const usersController = require('../controllers').users;
 const noteItemsController = require('../controllers').noteItems;
+const dateItemsController = require('../controllers').dateItems;
 
 module.exports = (app) => {
   app.get('/', (req, res) => res.sendFile(`../view/index.html`));
@@ -16,5 +17,9 @@ module.exports = (app) => {
 	
   app.post('/api/notes/:userid', noteItemsController.create);//create note
   app.post('/api/notes/:userid/items/:noteid', noteItemsController.update);//update note
-  app.get('/api/notes/:userid/items/:noteid', noteItemsController.destroy);//get note
+  app.get('/api/notes/:userid/items/:noteid', noteItemsController.destroy);//delete note
+
+  app.post('/api/dates/:userid', dateItemsController.create);//create date
+  app.post('/api/dates/:userid/items/:dateid', dateItemsController.update);//update date
+  app.get('/api/dates/:userid/items/:dateid', dateItemsController.destroy);//delete date
 };

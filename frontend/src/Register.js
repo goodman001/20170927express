@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
 import Login from './Login';
@@ -20,6 +22,7 @@ class Register extends Component {
 	  category:'',
 	  price:'',
 	  description:'',
+    role:'user',
     }
   }
   componentWillReceiveProps(nextProps){
@@ -59,7 +62,8 @@ class Register extends Component {
 		  "location":this.state.location,
 		  "category": this.state.category,
 		  "price":this.state.price,
-		  "description":this.state.description
+		  "description":this.state.description,
+      "role":this.state.role,
 	  }
 	  axios.post('/api/users', payload)
 	  .then(function (response) {
@@ -85,6 +89,11 @@ class Register extends Component {
       });
     }
 
+  }
+  handleMenuChange(value){
+    console.log("menuvalue",value); 
+    this.setState({role:value});
+    //this.setState({menuValue:value,                   loginComponent:localloginComponent,                   loginRole:loginRole})
   }
   render() {
     // console.log("props",this.props);
@@ -144,6 +153,13 @@ class Register extends Component {
              onChange = {(event,newValue) => this.setState({description:newValue})}
              />
            <br/>
+       <div>
+       <p>Login as:</p>
+		   <DropDownMenu value={this.state.role} onChange={(event,index,value)=>this.handleMenuChange(value)}>
+             <MenuItem value={"user"} primaryText="user" />
+             <MenuItem value={"client"} primaryText="client" />
+		   </DropDownMenu>
+       </div>
            <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.handleClick(event,this.props.role)}/>
           </div>
          </MuiThemeProvider>
