@@ -13,7 +13,8 @@ class Loginscreen extends Component {
       <div>
       <MuiThemeProvider>
         <div>
-           <RaisedButton label={"Register"} primary={true} style={style} onClick={(event) => this.handleClick(event,'student')}/>
+			<RaisedButton label={"Register as client"} primary={true} style={style} onClick={(event) => this.handleClick(event,'client')}/>
+			<RaisedButton label={"Register as user"} primary={true} style={style} onClick={(event) => this.handleClick(event,'user')}/>
        </div>
        </MuiThemeProvider>
       </div>
@@ -24,7 +25,6 @@ class Loginscreen extends Component {
       loginscreen:[],
       loginmessage:'',
       loginButtons:loginButtons,
-      studentbuttonLabel:'Register',
       isLogin:true
     }
   }
@@ -70,7 +70,8 @@ class Loginscreen extends Component {
         <div>
         <MuiThemeProvider>
           <div>
-             <RaisedButton label={"Register"} primary={true} style={style} onClick={(event) => this.handleClick(event,'student')}/>
+			<RaisedButton label={"Register as client"} primary={true} style={style} onClick={(event) => this.handleClick(event,'client')}/>
+			<RaisedButton label={"Register as user"} primary={true} style={style} onClick={(event) => this.handleClick(event,'user')}/>
          </div>
          </MuiThemeProvider>
         </div>

@@ -13,16 +13,17 @@ import Login from './Login';
 class Register extends Component {
   constructor(props){
     super(props);
+	  console.log(this.props.role);
     this.state={
-	  username:'',
+      username:'',
       email:'',
       password:'',
-	  gender:'',
-	  location:'',
-	  category:'',
-	  price:'',
-	  description:'',
-    role:'user',
+      gender:'',
+      location:'',
+      category:'',
+      price:'',
+      description:'',
+      role:this.props.role,
     }
   }
   componentWillReceiveProps(nextProps){
@@ -63,7 +64,7 @@ class Register extends Component {
 		  "category": this.state.category,
 		  "price":this.state.price,
 		  "description":this.state.description,
-      "role":this.state.role,
+          "role":this.state.role,
 	  }
 	  axios.post('/api/users', payload)
 	  .then(function (response) {
@@ -153,13 +154,6 @@ class Register extends Component {
              onChange = {(event,newValue) => this.setState({description:newValue})}
              />
            <br/>
-       <div>
-       <p>Login as:</p>
-		   <DropDownMenu value={this.state.role} onChange={(event,index,value)=>this.handleMenuChange(value)}>
-             <MenuItem value={"user"} primaryText="user" />
-             <MenuItem value={"client"} primaryText="client" />
-		   </DropDownMenu>
-       </div>
            <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.handleClick(event,this.props.role)}/>
           </div>
          </MuiThemeProvider>
